@@ -35,7 +35,7 @@ export const empty: ComponentQuery<SlotComponent> = (game, pos) => {
 		query.card.slotEntity(pos.entity),
 	)
 	if (!card) return true
-	if (card.isHermit() && !card.isAlive()) return true
+	if (card.isHealth() && !card.isAlive()) return true
 	return false
 }
 
