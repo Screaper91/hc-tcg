@@ -1,7 +1,6 @@
 import {
 	CardComponent,
 	ObserverComponent,
-	RowComponent,
 	SlotComponent,
 } from '../../../components'
 import query from '../../../components/query'
@@ -10,9 +9,6 @@ import {afterAttack} from '../../../types/priorities'
 import {applySingleUse} from '../../../utils/board'
 import {singleUse} from '../../defaults'
 import {SingleUse} from '../../types'
-
-const moveRowEntry = (row: RowComponent): string =>
-	`$p${row.player.playerName}$ moved $p${row.getHermit()?.props.name}$ to row #${row.index + 1}`
 
 const WindBurst: SingleUse = {
 	...singleUse,
@@ -23,7 +19,7 @@ const WindBurst: SingleUse = {
 	rarity: 'rare',
 	tokens: 0,
 	description:
-		'After your attack, you and your opponent must move your active Hermit and any attached cards to an open row on the game board if able.\nYour opponent moves their active Hermit first.',
+		"After your attack, move you and your opponent's active Hermits and any attached cards to an open row on the game board if able.\nMove your opponent's active Hermit first.",
 	log: (values) => `${values.defaultLog} with {your|their} attack`,
 	onAttach(
 		game: GameModel,
@@ -60,9 +56,9 @@ const WindBurst: SingleUse = {
 					game.components.exists(SlotComponent, opponentPickCondition)
 				) {
 					game.addPickRequest({
-						player: opponentPlayer.entity,
+						player: player.entity,
 						id: component.entity,
-						message: 'Pick an empty Hermit slot',
+						message: 'Pick an empty Hermit slot for your opponent',
 						canPick: opponentPickCondition,
 						onResult(pickedSlot) {
 							if (!pickedSlot.inRow() || !opponentPlayer.activeRow) return
@@ -70,8 +66,8 @@ const WindBurst: SingleUse = {
 							game.swapRows(opponentPlayer.activeRow, pickedSlot.row)
 
 							game.battleLog.addEntry(
-								opponentPlayer.entity,
-								moveRowEntry(opponentPlayer.activeRow),
+								player.entity,
+								`$p{You|${player.playerName}}$ moved $o${opponentPlayer.getActiveHermit()?.props.name}$ to row #${opponentPlayer.activeRow.index + 1}`,
 							)
 						},
 					})
@@ -98,7 +94,7 @@ const WindBurst: SingleUse = {
 					game.addPickRequest({
 						player: player.entity,
 						id: component.entity,
-						message: 'Pick an empty Hermit slot',
+						message: 'Pick an empty Hermit slot to move your active',
 						canPick: playerPickCondition,
 						onResult(pickedSlot) {
 							if (!pickedSlot.inRow() || !player.activeRow) return
@@ -107,7 +103,7 @@ const WindBurst: SingleUse = {
 
 							game.battleLog.addEntry(
 								player.entity,
-								moveRowEntry(player.activeRow),
+								`$p{You|${player.playerName}}$ moved $p${player.getActiveHermit()?.props.name}$ to row #${player.activeRow.index + 1}`,
 							)
 						},
 					})
