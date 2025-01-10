@@ -6,6 +6,7 @@ import Wolf from 'common/cards/attach/wolf'
 import EthosLabCommon from 'common/cards/hermits/ethoslab-common'
 import RendogRare from 'common/cards/hermits/rendog-rare'
 import BalancedItem from 'common/cards/items/balanced-common'
+import Anvil from 'common/cards/single-use/anvil'
 import Emerald from 'common/cards/single-use/emerald'
 import GoldenAxe from 'common/cards/single-use/golden-axe'
 import Ladder from 'common/cards/single-use/ladder'
@@ -54,7 +55,7 @@ describe('Test Zookeeper Scar', () => {
 		testGame(
 			{
 				playerOneDeck: [EthosLabCommon, ZookeeperScarRare, Wolf],
-				playerTwoDeck: [EthosLabCommon, Emerald],
+				playerTwoDeck: [EthosLabCommon, Anvil, Emerald],
 				saga: function* (game) {
 					yield* playCardFromHand(game, EthosLabCommon, 'hermit', 0)
 					yield* playCardFromHand(game, Wolf, 'attach', 0)
@@ -62,6 +63,7 @@ describe('Test Zookeeper Scar', () => {
 					yield* endTurn(game)
 
 					yield* playCardFromHand(game, EthosLabCommon, 'hermit', 0)
+					yield* playCardFromHand(game, Anvil, 'single_use')
 					yield* attack(game, 'primary')
 					expect(game.currentPlayer.activeRow?.health).toBe(
 						EthosLabCommon.health - 2 * 20,
@@ -293,7 +295,7 @@ describe('Test Zookeeper Scar', () => {
 					yield* playCardFromHand(game, GoldenAxe, 'single_use')
 					yield* attack(game, 'single-use')
 					expect(game.currentPlayer.activeRow?.health).toBe(
-						EthosLabCommon.health - 2 * 20,
+						EthosLabCommon.health - 20,
 					) // Wolf attached to Etho & Wolf "attached" to Scar
 					yield* endTurn(game)
 
@@ -303,7 +305,7 @@ describe('Test Zookeeper Scar', () => {
 					yield* playCardFromHand(game, GoldenAxe, 'single_use')
 					yield* attack(game, 'single-use')
 					expect(game.currentPlayer.activeRow?.health).toBe(
-						EthosLabCommon.health - 2 * 20,
+						EthosLabCommon.health - 20,
 					) // No further damage
 				},
 			},

@@ -4,6 +4,13 @@ import {GameModel} from '../../models/game-model'
 import {beforeAttack} from '../../types/priorities'
 import {attach} from '../defaults'
 import {Attach} from '../types'
+import {
+	ChainmailArmor,
+	DiamondArmor,
+	GoldArmor,
+	IronArmor,
+	NetheriteArmor,
+} from './armor'
 
 const Wolf: Attach = {
 	...attach,
@@ -13,15 +20,13 @@ const Wolf: Attach = {
 	expansion: 'default',
 	rarity: 'rare',
 	tokens: 1,
-	description:
-		"Attach to your active Hermit.\nIf any of your Hermits take damage on your opponent's turn, your opponent's active Hermit takes 20hp damage for each Wolf card you have on the game board.",
-	attachCondition: query.every(attach.attachCondition, query.slot.active),
+	description: 'Opponent takes 20hp damage after their attack.\nIgnores armour',
 	onAttach(
 		game: GameModel,
 		component: CardComponent,
 		observer: ObserverComponent,
 	) {
-		const {player, opponentPlayer} = component
+		const {opponentPlayer} = component
 		let activated = false
 
 		observer.subscribe(opponentPlayer.hooks.onTurnStart, () => {
@@ -39,7 +44,7 @@ const Wolf: Attach = {
 
 				// Make sure they are targeting this player
 				if (attack.player !== opponentPlayer) return
-				if (attack.target?.player.entity !== player.entity) return
+				if (!attack.isTargeting(component)) return
 
 				// Make sure the attack is doing some damage
 				if (attack.calculateDamage() <= 0) return
@@ -55,6 +60,15 @@ const Wolf: Attach = {
 						isBacklash: true,
 						log: (values) =>
 							`${values.target} took ${values.damage} damage from $eWolf$`,
+						shouldIgnoreSlots: [
+							query.card.is(
+								GoldArmor,
+								IronArmor,
+								DiamondArmor,
+								NetheriteArmor,
+								ChainmailArmor,
+							),
+						],
 					})
 					.addDamage(component.entity, 20)
 

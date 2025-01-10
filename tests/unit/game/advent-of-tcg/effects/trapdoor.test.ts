@@ -478,7 +478,7 @@ describe('Test Trapdoor', () => {
 		)
 	})
 
-	test('Wolf triggers when Trapdoor redirects all damage', () => {
+	test('Wolf is not triggered when Trapdoor redirects all damage', () => {
 		testGame(
 			{
 				playerOneDeck: [EthosLabCommon, EthosLabCommon, Wolf, Trapdoor],
@@ -493,7 +493,7 @@ describe('Test Trapdoor', () => {
 					yield* playCardFromHand(game, VintageBeefCommon, 'hermit', 0)
 					yield* attack(game, 'primary')
 					expect(game.currentPlayer.activeRow?.health).toBe(
-						VintageBeefCommon.health - 20 /** Wolf */,
+						VintageBeefCommon.health,
 					)
 					expect(game.opponentPlayer.activeRow?.health).toBe(
 						EthosLabCommon.health,

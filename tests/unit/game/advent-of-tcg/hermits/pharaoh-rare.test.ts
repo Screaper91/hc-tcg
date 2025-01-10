@@ -1,7 +1,6 @@
 import {describe, expect, test} from '@jest/globals'
 import Trapdoor from 'common/cards/advent-of-tcg/attach/trapdoor'
 import BigBSt4tzRare from 'common/cards/advent-of-tcg/hermits/bigbst4tz2-rare'
-import GrianchRare from 'common/cards/advent-of-tcg/hermits/grianch-rare'
 import PharaohRare from 'common/cards/advent-of-tcg/hermits/pharaoh-rare'
 import {DiamondArmor} from 'common/cards/attach/armor'
 import Shield from 'common/cards/attach/shield'
@@ -9,9 +8,8 @@ import {Thorns} from 'common/cards/attach/thorns'
 import TurtleShell from 'common/cards/attach/turtle-shell'
 import Wolf from 'common/cards/attach/wolf'
 import EthosLabCommon from 'common/cards/hermits/ethoslab-common'
-import ZombieCleoRare from 'common/cards/hermits/zombiecleo-rare'
 import BadOmen from 'common/cards/single-use/bad-omen'
-import Bow from 'common/cards/single-use/bow'
+import Crossbow from 'common/cards/single-use/crossbow'
 import InvisibilityPotion from 'common/cards/single-use/invisibility-potion'
 import Knockback from 'common/cards/single-use/knockback'
 import PotionOfWeakness from 'common/cards/single-use/potion-of-weakness'
@@ -19,13 +17,11 @@ import TNT from 'common/cards/single-use/tnt'
 import {RowComponent} from 'common/components'
 import query from 'common/components/query'
 import {WEAKNESS_DAMAGE} from 'common/const/damage'
-import {soulmateEffectDamage} from 'common/status-effects/soulmate'
 import {
 	applyEffect,
 	attack,
 	changeActiveHermit,
 	endTurn,
-	finishModalRequest,
 	pick,
 	playCardFromHand,
 	testGame,
@@ -413,10 +409,10 @@ describe('Test Pharaoh Xibalba', () => {
 		)
 	})
 
-	test('Xibalba + Bow against Wolf + Thorns + Turtle Shell', () => {
+	test('Xibalba + Crossbow against Wolf + Thorns + Turtle Shell', () => {
 		testGame(
 			{
-				playerOneDeck: [EthosLabCommon, PharaohRare, Bow],
+				playerOneDeck: [EthosLabCommon, PharaohRare, Crossbow],
 				playerTwoDeck: [
 					EthosLabCommon,
 					EthosLabCommon,
@@ -445,13 +441,25 @@ describe('Test Pharaoh Xibalba', () => {
 					yield* changeActiveHermit(game, 2)
 					yield* endTurn(game)
 
-					yield* playCardFromHand(game, Bow, 'single_use')
+					yield* playCardFromHand(game, Crossbow, 'single_use')
 					yield* attack(game, 'secondary')
 					yield* pick(
 						game,
 						query.slot.opponent,
 						query.slot.hermit,
+						query.slot.rowIndex(0),
+					)
+					yield* pick(
+						game,
+						query.slot.opponent,
+						query.slot.hermit,
 						query.slot.rowIndex(1),
+					)
+					yield* pick(
+						game,
+						query.slot.opponent,
+						query.slot.hermit,
+						query.slot.rowIndex(2),
 					)
 					expect(
 						game.components.find(
@@ -459,14 +467,14 @@ describe('Test Pharaoh Xibalba', () => {
 							query.row.opponentPlayer,
 							query.row.index(0),
 						)?.health,
-					).toBe(EthosLabCommon.health)
+					).toBe(EthosLabCommon.health - 20 /** Crossbow */)
 					expect(
 						game.components.find(
 							RowComponent,
 							query.row.opponentPlayer,
 							query.row.index(1),
 						)?.health,
-					).toBe(EthosLabCommon.health - 40 /** Bow */)
+					).toBe(EthosLabCommon.health - 20 /** Crossbow */)
 					expect(
 						game.components.find(
 							RowComponent,
@@ -580,100 +588,101 @@ describe('Test Pharaoh Xibalba', () => {
 	})
 
 	// Test interactions with Grianch which allows two attacks in one turn
-	test('Soulmate + Xibalba against Wolf knock-out', () => {
-		testGame(
-			{
-				playerOneDeck: [
-					EthosLabCommon,
-					GrianchRare,
-					Wolf,
-					DiamondArmor,
-					InvisibilityPotion,
-					Knockback,
-				],
-				playerTwoDeck: [BigBSt4tzRare, ZombieCleoRare, PharaohRare, BadOmen],
-				saga: function* (game) {
-					yield* playCardFromHand(game, EthosLabCommon, 'hermit', 0)
-					yield* playCardFromHand(game, GrianchRare, 'hermit', 1)
-					yield* playCardFromHand(game, Wolf, 'attach', 0)
-					yield* playCardFromHand(game, DiamondArmor, 'attach', 1)
-					yield* playCardFromHand(game, InvisibilityPotion, 'single_use')
-					yield* applyEffect(game)
-					yield* changeActiveHermit(game, 1)
-					yield* endTurn(game)
+	/** Relies on AFK Wolf causing backlash on second attack, may be refactored to use Royal Protection + Trapdoor */
+	// test('Soulmate + Xibalba against Wolf knock-out', () => {
+	// 	testGame(
+	// 		{
+	// 			playerOneDeck: [
+	// 				EthosLabCommon,
+	// 				GrianchRare,
+	// 				Wolf,
+	// 				DiamondArmor,
+	// 				InvisibilityPotion,
+	// 				Knockback,
+	// 			],
+	// 			playerTwoDeck: [BigBSt4tzRare, ZombieCleoRare, PharaohRare, BadOmen],
+	// 			saga: function* (game) {
+	// 				yield* playCardFromHand(game, EthosLabCommon, 'hermit', 0)
+	// 				yield* playCardFromHand(game, GrianchRare, 'hermit', 1)
+	// 				yield* playCardFromHand(game, Wolf, 'attach', 0)
+	// 				yield* playCardFromHand(game, DiamondArmor, 'attach', 1)
+	// 				yield* playCardFromHand(game, InvisibilityPotion, 'single_use')
+	// 				yield* applyEffect(game)
+	// 				yield* changeActiveHermit(game, 1)
+	// 				yield* endTurn(game)
 
-					yield* playCardFromHand(game, BigBSt4tzRare, 'hermit', 0)
-					yield* playCardFromHand(game, ZombieCleoRare, 'hermit', 1)
-					yield* playCardFromHand(game, PharaohRare, 'hermit', 2)
-					yield* playCardFromHand(game, BadOmen, 'single_use')
-					yield* applyEffect(game)
-					yield* endTurn(game)
+	// 				yield* playCardFromHand(game, BigBSt4tzRare, 'hermit', 0)
+	// 				yield* playCardFromHand(game, ZombieCleoRare, 'hermit', 1)
+	// 				yield* playCardFromHand(game, PharaohRare, 'hermit', 2)
+	// 				yield* playCardFromHand(game, BadOmen, 'single_use')
+	// 				yield* applyEffect(game)
+	// 				yield* endTurn(game)
 
-					yield* playCardFromHand(game, Knockback, 'single_use')
-					yield* attack(game, 'secondary')
-					yield* pick(
-						game,
-						query.slot.opponent,
-						query.slot.hermit,
-						query.slot.rowIndex(1),
-					)
-					yield* endTurn(game)
+	// 				yield* playCardFromHand(game, Knockback, 'single_use')
+	// 				yield* attack(game, 'secondary')
+	// 				yield* pick(
+	// 					game,
+	// 					query.slot.opponent,
+	// 					query.slot.hermit,
+	// 					query.slot.rowIndex(1),
+	// 				)
+	// 				yield* endTurn(game)
 
-					yield* attack(game, 'secondary')
-					yield* pick(
-						game,
-						query.slot.currentPlayer,
-						query.slot.hermit,
-						query.slot.rowIndex(0),
-					)
-					yield* finishModalRequest(game, {pick: 'secondary'})
-					expect(game.opponentPlayer.activeRow?.health).toBe(GrianchRare.health)
-					expect(game.currentPlayer.activeRow?.health).toBe(
-						ZombieCleoRare.health,
-					)
-					// Manually set Cleo health to trigger zone
-					game.currentPlayer.activeRow!.health = 10
-					yield* attack(game, 'secondary')
-					yield* pick(
-						game,
-						query.slot.currentPlayer,
-						query.slot.hermit,
-						query.slot.rowIndex(2),
-					)
-					yield* finishModalRequest(game, {pick: 'secondary'})
-					expect(game.opponentPlayer.activeRow?.health).toBe(
-						GrianchRare.health -
-							(PharaohRare.secondary.damage - 20) /** Diamond Armor */ -
-							soulmateEffectDamage,
-					)
-					expect(
-						game.components.find(
-							RowComponent,
-							query.row.currentPlayer,
-							query.row.index(0),
-						)?.health,
-					).toBe(BigBSt4tzRare.health - GrianchRare.secondary.damage)
-					expect(game.currentPlayer.activeRow).toBe(null)
-					yield* pick(
-						game,
-						query.slot.currentPlayer,
-						query.slot.hermit,
-						query.slot.rowIndex(0),
-					)
-					expect(
-						game.components.find(
-							RowComponent,
-							query.row.currentPlayer,
-							query.row.index(0),
-						)?.health,
-					).toBe(
-						BigBSt4tzRare.health -
-							GrianchRare.secondary.damage +
-							(PharaohRare.secondary.damage - 20) /** Diamond Armor */,
-					)
-				},
-			},
-			{startWithAllCards: true, noItemRequirements: true, forceCoinFlip: true},
-		)
-	})
+	// 				yield* attack(game, 'secondary')
+	// 				yield* pick(
+	// 					game,
+	// 					query.slot.currentPlayer,
+	// 					query.slot.hermit,
+	// 					query.slot.rowIndex(0),
+	// 				)
+	// 				yield* finishModalRequest(game, {pick: 'secondary'})
+	// 				expect(game.opponentPlayer.activeRow?.health).toBe(GrianchRare.health)
+	// 				expect(game.currentPlayer.activeRow?.health).toBe(
+	// 					ZombieCleoRare.health,
+	// 				)
+	// 				// Manually set Cleo health to trigger zone
+	// 				game.currentPlayer.activeRow!.health = 10
+	// 				yield* attack(game, 'secondary')
+	// 				yield* pick(
+	// 					game,
+	// 					query.slot.currentPlayer,
+	// 					query.slot.hermit,
+	// 					query.slot.rowIndex(2),
+	// 				)
+	// 				yield* finishModalRequest(game, {pick: 'secondary'})
+	// 				expect(game.opponentPlayer.activeRow?.health).toBe(
+	// 					GrianchRare.health -
+	// 						(PharaohRare.secondary.damage - 20) /** Diamond Armor */ -
+	// 						soulmateEffectDamage,
+	// 				)
+	// 				expect(
+	// 					game.components.find(
+	// 						RowComponent,
+	// 						query.row.currentPlayer,
+	// 						query.row.index(0),
+	// 					)?.health,
+	// 				).toBe(BigBSt4tzRare.health - GrianchRare.secondary.damage)
+	// 				expect(game.currentPlayer.activeRow).toBe(null)
+	// 				yield* pick(
+	// 					game,
+	// 					query.slot.currentPlayer,
+	// 					query.slot.hermit,
+	// 					query.slot.rowIndex(0),
+	// 				)
+	// 				expect(
+	// 					game.components.find(
+	// 						RowComponent,
+	// 						query.row.currentPlayer,
+	// 						query.row.index(0),
+	// 					)?.health,
+	// 				).toBe(
+	// 					BigBSt4tzRare.health -
+	// 						GrianchRare.secondary.damage +
+	// 						(PharaohRare.secondary.damage - 20) /** Diamond Armor */,
+	// 				)
+	// 			},
+	// 		},
+	// 		{startWithAllCards: true, noItemRequirements: true, forceCoinFlip: true},
+	// 	)
+	// })
 })
