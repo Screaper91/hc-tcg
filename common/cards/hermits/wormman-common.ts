@@ -14,13 +14,15 @@ const WormManCommon: Hermit = {
 	type: 'terraform',
 	health: 290,
 	primary: {
-		name: 'Justice!',
+		name: 'Underpants of Justice',
+		shortName: 'Justice',
 		cost: ['terraform'],
 		damage: 60,
 		power: null,
 	},
 	secondary: {
-		name: 'Away!',
+		name: 'Worm Man Away!',
+		shortName: 'Away!',
 		cost: ['terraform', 'terraform', 'any'],
 		damage: 90,
 		power: null,

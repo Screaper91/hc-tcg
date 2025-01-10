@@ -3,8 +3,6 @@ import query from '../../components/query'
 import {GameModel} from '../../models/game-model'
 import {beforeAttack} from '../../types/priorities'
 import {hermit} from '../defaults'
-import KingJoelCommon from '../hermits/kingjoel-common'
-import KingJoelRare from '../hermits/kingjoel-rare'
 import {Hermit} from '../types'
 import SmallishbeansCommon from './smallishbeans-common'
 
@@ -12,7 +10,8 @@ const SmallishbeansRare: Hermit = {
 	...hermit,
 	id: 'smallishbeans_rare',
 	numericId: 161,
-	name: 'Joel',
+	name: 'Smallishbeans',
+	shortName: 'S.beans',
 	expansion: 'season_x',
 	rarity: 'rare',
 	tokens: 1,
@@ -29,7 +28,7 @@ const SmallishbeansRare: Hermit = {
 		cost: ['explorer', 'explorer', 'any'],
 		damage: 90,
 		power:
-			'For each AFK Joel or King Joel on the game board, do an additional 10hp damage.',
+			'For every other Smallishbeans on the game board, do an additional 10hp damage.',
 	},
 	onAttach(
 		game: GameModel,
@@ -46,13 +45,8 @@ const SmallishbeansRare: Hermit = {
 				const joelQuantity = game.components.filter(
 					CardComponent,
 					query.card.attached,
-					query.card.is(
-						SmallishbeansCommon,
-						SmallishbeansRare,
-						KingJoelCommon,
-						KingJoelRare,
-					),
-					query.not(query.card.active),
+					query.card.is(SmallishbeansCommon, SmallishbeansRare),
+					query.not(query.card.entity(component.entity)),
 				).length
 
 				attack.addDamage(component.entity, joelQuantity * 10)

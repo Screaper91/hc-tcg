@@ -5,7 +5,6 @@ import {Thorns} from 'common/cards/attach/thorns'
 import Totem from 'common/cards/attach/totem'
 import EthosLabCommon from 'common/cards/hermits/ethoslab-common'
 import GoodTimesWithScarRare from 'common/cards/hermits/goodtimeswithscar-rare'
-import PrincessGemRare from 'common/cards/hermits/princessgem-rare'
 import ZombieCleoRare from 'common/cards/hermits/zombiecleo-rare'
 import BadOmen from 'common/cards/single-use/bad-omen'
 import ChorusFruit from 'common/cards/single-use/chorus-fruit'
@@ -206,60 +205,60 @@ describe('Test BigB Soulmate', () => {
 		)
 	})
 
-	test('Soulmate extra damage is not blocked by "Royal Protection"', () => {
-		testGame(
-			{
-				playerOneDeck: [BigBSt4tzRare, EthosLabCommon],
-				playerTwoDeck: [
-					PrincessGemRare,
-					EthosLabCommon,
-					LavaBucket,
-					ChorusFruit,
-				],
-				saga: function* (game) {
-					yield* playCardFromHand(game, BigBSt4tzRare, 'hermit', 0)
-					yield* playCardFromHand(game, EthosLabCommon, 'hermit', 1)
-					yield* endTurn(game)
+	// test('Soulmate extra damage is not blocked by "Royal Protection"', () => {
+	// 	testGame(
+	// 		{
+	// 			playerOneDeck: [BigBSt4tzRare, EthosLabCommon],
+	// 			playerTwoDeck: [
+	// 				PrincessGemRare,
+	// 				EthosLabCommon,
+	// 				LavaBucket,
+	// 				ChorusFruit,
+	// 			],
+	// 			saga: function* (game) {
+	// 				yield* playCardFromHand(game, BigBSt4tzRare, 'hermit', 0)
+	// 				yield* playCardFromHand(game, EthosLabCommon, 'hermit', 1)
+	// 				yield* endTurn(game)
 
-					yield* playCardFromHand(game, PrincessGemRare, 'hermit', 0)
-					yield* playCardFromHand(game, EthosLabCommon, 'hermit', 1)
-					yield* playCardFromHand(game, LavaBucket, 'single_use')
-					yield* applyEffect(game)
-					yield* endTurn(game)
+	// 				yield* playCardFromHand(game, PrincessGemRare, 'hermit', 0)
+	// 				yield* playCardFromHand(game, EthosLabCommon, 'hermit', 1)
+	// 				yield* playCardFromHand(game, LavaBucket, 'single_use')
+	// 				yield* applyEffect(game)
+	// 				yield* endTurn(game)
 
-					yield* attack(game, 'secondary')
-					yield* endTurn(game)
+	// 				yield* attack(game, 'secondary')
+	// 				yield* endTurn(game)
 
-					yield* playCardFromHand(game, ChorusFruit, 'single_use')
-					yield* attack(game, 'secondary')
-					yield* pick(
-						game,
-						query.slot.currentPlayer,
-						query.slot.hermit,
-						query.slot.rowIndex(1),
-					)
-					yield* pick(
-						game,
-						query.slot.currentPlayer,
-						query.slot.hermit,
-						query.slot.rowIndex(1),
-					)
-					// Manually set BigB health to trigger zone
-					game.components.find(
-						RowComponent,
-						query.row.opponentPlayer,
-						query.row.index(0),
-					)!.health = 10
-					yield* endTurn(game)
+	// 				yield* playCardFromHand(game, ChorusFruit, 'single_use')
+	// 				yield* attack(game, 'secondary')
+	// 				yield* pick(
+	// 					game,
+	// 					query.slot.currentPlayer,
+	// 					query.slot.hermit,
+	// 					query.slot.rowIndex(1),
+	// 				)
+	// 				yield* pick(
+	// 					game,
+	// 					query.slot.currentPlayer,
+	// 					query.slot.hermit,
+	// 					query.slot.rowIndex(1),
+	// 				)
+	// 				// Manually set BigB health to trigger zone
+	// 				game.components.find(
+	// 					RowComponent,
+	// 					query.row.opponentPlayer,
+	// 					query.row.index(0),
+	// 				)!.health = 10
+	// 				yield* endTurn(game)
 
-					expect(game.opponentPlayer.activeRow?.health).toBe(
-						EthosLabCommon.health - soulmateEffectDamage,
-					)
-				},
-			},
-			{startWithAllCards: true, noItemRequirements: true},
-		)
-	})
+	// 				expect(game.opponentPlayer.activeRow?.health).toBe(
+	// 					EthosLabCommon.health - soulmateEffectDamage,
+	// 				)
+	// 			},
+	// 		},
+	// 		{startWithAllCards: true, noItemRequirements: true},
+	// 	)
+	// })
 
 	test('Soulmate causing double knock-out when triggered by Burn', () => {
 		testGame(

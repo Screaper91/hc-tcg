@@ -6,6 +6,7 @@ const PoePoeSkizzCommon: Hermit = {
 	id: 'poepoeskizz_common',
 	numericId: 166,
 	name: 'Poe Poe Skizz',
+	shortName: 'Poe Skizz',
 	expansion: 'alter_egos_iii',
 	background: 'alter_egos',
 	palette: 'alter_egos',
@@ -14,7 +15,8 @@ const PoePoeSkizzCommon: Hermit = {
 	type: 'explorer',
 	health: 300,
 	primary: {
-		name: 'Citation',
+		name: 'Citation Smackdown',
+		shortName: 'Citation',
 		cost: ['any'],
 		damage: 40,
 		power: null,

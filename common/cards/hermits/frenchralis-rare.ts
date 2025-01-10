@@ -1,7 +1,6 @@
 import {CardComponent, ObserverComponent} from '../../components'
 import {GameModel} from '../../models/game-model'
 import {beforeAttack} from '../../types/priorities'
-import {flipCoin} from '../../utils/coinFlips'
 import {hermit} from '../defaults'
 import {Hermit} from '../types'
 
@@ -18,7 +17,8 @@ const FrenchralisRare: Hermit = {
 	type: 'prankster',
 	health: 250,
 	primary: {
-		name: 'French.',
+		name: "Je m'appelle Keralis",
+		shortName: "Je m'appelle",
 		cost: ['prankster'],
 		damage: 60,
 		power: null,
@@ -28,7 +28,7 @@ const FrenchralisRare: Hermit = {
 		cost: ['prankster', 'prankster'],
 		damage: 80,
 		power:
-			"Flip a coin for each life you've lost. Do an additional 40hp damage for every heads.",
+			'If opponent has knocked out 2 of your hermits, this attack does double damage.',
 	},
 	onAttach(
 		game: GameModel,
@@ -44,9 +44,7 @@ const FrenchralisRare: Hermit = {
 				if (!attack.isAttacker(component.entity) || attack.type !== 'secondary')
 					return
 
-				const coinFlip = flipCoin(game, player, component, 3 - player.lives)
-				const headsAmount = coinFlip.filter((flip) => flip === 'heads').length
-				attack.addDamage(component.entity, headsAmount * 40)
+				if (player.lives === 1) attack.multiplyDamage(component.entity, 2)
 			},
 		)
 	},

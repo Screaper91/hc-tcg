@@ -15,6 +15,7 @@ const PoePoeSkizzRare: Hermit = {
 	id: 'poepoeskizz_rare',
 	numericId: 167,
 	name: 'Poe Poe Skizz',
+	shortName: 'Poe Skizz',
 	expansion: 'alter_egos_iii',
 	background: 'alter_egos',
 	palette: 'alter_egos',
@@ -29,7 +30,7 @@ const PoePoeSkizzRare: Hermit = {
 		power: null,
 	},
 	secondary: {
-		name: 'Jumpscare',
+		name: 'Jump Scare',
 		cost: ['pvp', 'pvp', 'any'],
 		damage: 90,
 		power:

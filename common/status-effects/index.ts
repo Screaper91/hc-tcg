@@ -9,6 +9,7 @@ import CurseOfBindingEffect from './curse-of-binding'
 import {DeathloopReady, RevivedByDeathloopEffect} from './death-loop'
 import DyedEffect from './dyed'
 import EfficiencyEffect from './efficiency'
+import EmpireEffect from './empire'
 import ExBossNineEffect from './exboss-nine'
 import FireEffect from './fire'
 import FortuneEffect from './fortune'
@@ -98,6 +99,7 @@ export const STATUS_EFFECTS_LIST: Array<StatusEffect> = [
 	ChromaKeyedEffect,
 	GoMiningEffect,
 	RoyalProtectionEffect,
+	EmpireEffect,
 	TargetBlockEffect,
 	GasLightEffect,
 	GasLightTriggeredEffect,

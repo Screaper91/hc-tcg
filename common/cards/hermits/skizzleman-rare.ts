@@ -25,7 +25,7 @@ const SkizzlemanRare: Hermit = {
 	type: 'builder',
 	health: 290,
 	primary: {
-		name: 'Hupper Cut ',
+		name: 'Hupper Cut',
 		cost: ['any'],
 		damage: 40,
 		power: null,

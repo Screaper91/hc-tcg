@@ -49,7 +49,7 @@ describe('Test Frenchralis Rare', () => {
 							query.row.opponentPlayer,
 							query.row.index(0),
 						)?.health,
-					).toBe(EthosLabCommon.health - FrenchralisRare.secondary.damage - 40)
+					).toBe(EthosLabCommon.health - FrenchralisRare.secondary.damage)
 				},
 			},
 			{startWithAllCards: true, noItemRequirements: true, forceCoinFlip: true},
@@ -74,10 +74,10 @@ describe('Test Frenchralis Rare', () => {
 							query.row.opponentPlayer,
 							query.row.index(0),
 						)?.health,
-					).toBe(EthosLabCommon.health - FrenchralisRare.secondary.damage - 80)
+					).toBe(EthosLabCommon.health - FrenchralisRare.secondary.damage * 2)
 				},
 			},
-			{startWithAllCards: true, noItemRequirements: true, forceCoinFlip: true},
+			{startWithAllCards: true, noItemRequirements: true},
 		)
 	})
 })

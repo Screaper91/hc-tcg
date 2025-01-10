@@ -22,7 +22,8 @@ const HelsknightRare: Hermit = {
 	type: 'pvp',
 	health: 270,
 	primary: {
-		name: 'Pitiful',
+		name: "You're Pitiful",
+		shortName: 'Pitiful',
 		cost: ['any'],
 		damage: 40,
 		power: null,

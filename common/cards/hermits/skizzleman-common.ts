@@ -12,7 +12,8 @@ const SkizzlemanCommon: Hermit = {
 	type: 'explorer',
 	health: 280,
 	primary: {
-		name: 'Laugh Attack ',
+		name: 'Laugh Attack',
+		shortName: 'Laugh Attk',
 		cost: ['any'],
 		damage: 40,
 		power: null,
