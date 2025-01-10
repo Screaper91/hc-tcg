@@ -9,15 +9,15 @@ import {attack, endTurn, playCardFromHand, testGame} from '../utils'
 let thornsMap = {
 	Thorns: {
 		card: Thorns,
-		damage: 20,
+		damage: 10,
 	},
 	'Thorns II': {
 		card: ThornsII,
-		damage: 30,
+		damage: 20,
 	},
 	'Thorns III': {
 		card: ThornsIII,
-		damage: 40,
+		damage: 30,
 	},
 }
 

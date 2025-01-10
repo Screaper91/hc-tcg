@@ -545,7 +545,7 @@ describe('Test Trapdoor', () => {
 		)
 	})
 
-	test('Thorns triggers from Weakness damage when Trapdoor + Royal Protection blocks hermit damage', () => {
+	test('Wolf triggers from Weakness damage when Trapdoor + Royal Protection blocks hermit damage', () => {
 		testGame(
 			{
 				playerOneDeck: [VintageBeefCommon, PotionOfWeakness],
@@ -621,7 +621,7 @@ describe('Test Trapdoor', () => {
 					expect(game.currentPlayer.activeRow?.health).toBe(
 						VintageBeefCommon.health -
 							PrincessGemRare.secondary.damage -
-							20 /** Thorns */,
+							10 /** Thorns */,
 					)
 					expect(game.opponentPlayer.activeRow?.health).toBe(
 						PrincessGemRare.health -

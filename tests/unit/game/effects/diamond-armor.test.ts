@@ -25,7 +25,7 @@ describe('Test Diamond Armor', () => {
 							query.row.active,
 							query.row.opponentPlayer,
 						)?.health,
-					).toBe(EthosLabCommon.health - 20)
+					).toBe(EthosLabCommon.health - (EthosLabCommon.primary.damage - 20))
 				},
 			},
 			{startWithAllCards: true, noItemRequirements: true},
@@ -50,7 +50,7 @@ describe('Test Diamond Armor', () => {
 							query.row.active,
 							query.row.opponentPlayer,
 						)?.health,
-					).toBe(EthosLabCommon.health - 20 - 20)
+					).toBe(EthosLabCommon.health - (EthosLabCommon.primary.damage - 20))
 				},
 			},
 			{startWithAllCards: true, noItemRequirements: true},

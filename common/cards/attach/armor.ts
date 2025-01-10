@@ -67,35 +67,6 @@ function blockEffect(
 	)
 }
 
-function blockSingleUseRedirect(
-	game: GameModel,
-	component: CardComponent,
-	observer: ObserverComponent,
-) {
-	observer.subscribeWithPriority(
-		game.hooks.beforeAttack,
-		beforeAttack.EFFECT_BLOCK_DAMAGE,
-		(attack) => {
-			if (!attack.isTargeting(component)) {
-				return
-			}
-
-			// only protect against su attacks and attacks which have been redirected by su cards
-			let suRedirect = false
-
-			const lastTargetChange = attack.getHistory('redirect').pop()
-			if (lastTargetChange) {
-				// This attack has been redirected to us by a su card
-				suRedirect = true
-			}
-
-			if (suRedirect) {
-				attack.multiplyDamage(component.entity, 0).lockDamage(component.entity)
-			}
-		},
-	)
-}
-
 function blockKnockback(component: CardComponent, observer: ObserverComponent) {
 	observer.subscribe(component.player.hooks.blockKnockback, () => {
 		if (!component.slot.inRow()) return false
@@ -149,15 +120,13 @@ export const ChainmailArmor: Attach = {
 	expansion: 'alter_egos',
 	rarity: 'common',
 	tokens: 1,
-	description:
-		'Prevents any damage from effect cards and any damage redirected by effect cards to the Hermit this card is attached to.',
+	description: 'Prevents any damage from effect cards.',
 	onAttach(
 		game: GameModel,
 		component: CardComponent,
 		observer: ObserverComponent,
 	) {
 		blockEffect(null, game, component, observer)
-		blockSingleUseRedirect(game, component, observer)
 	},
 }
 
@@ -170,13 +139,13 @@ export const DiamondArmor: Attach = {
 	rarity: 'rare',
 	tokens: 3,
 	description:
-		'When the Hermit this card is attached to takes damage, that damage is reduced by up to 20hp each turn. Prevents up to an aditional 20 damage from effect cards.',
+		'When the Hermit this card is attached to takes damage, that damage is reduced by up to 20hp each turn. Prevents any damage from effect cards.',
 	onAttach(
 		game: GameModel,
 		component: CardComponent,
 		observer: ObserverComponent,
 	) {
-		blockEffect(20, game, component, observer)
+		blockEffect(null, game, component, observer)
 		blockDamage(20, game, component, observer)
 	},
 }

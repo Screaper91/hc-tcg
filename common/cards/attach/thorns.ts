@@ -1,12 +1,10 @@
 import {CardComponent, ObserverComponent} from '../../components'
-import query from '../../components/query'
 import {ExpansionT} from '../../const/expansions'
 import {GameModel} from '../../models/game-model'
 import {CardRarityT, TokenCostT} from '../../types/cards'
 import {beforeAttack, onTurnEnd} from '../../types/priorities'
 import {attach} from '../defaults'
 import {Attach} from '../types'
-import {DiamondArmor, GoldArmor, IronArmor, NetheriteArmor} from './armor'
 
 function getThorns(
 	props: {
@@ -27,7 +25,7 @@ function getThorns(
 		expansion: props.expansion,
 		rarity: props.rarity,
 		tokens: props.tokens,
-		description: `When the Hermit this card is attached to takes damage, your opponent's active Hermit takes ${amount}hp damage.\nIgnores armour.`,
+		description: `When the Hermit this card is attached to takes damage, your opponent's active Hermit takes ${amount}hp damage.`,
 		onAttach(
 			game: GameModel,
 			component: CardComponent,
@@ -70,10 +68,6 @@ function getThorns(
 						})
 						.addDamage(component.entity, amount)
 
-					backlashAttack.shouldIgnoreCards.push(
-						query.card.is(GoldArmor, IronArmor, DiamondArmor, NetheriteArmor),
-					)
-
 					attack.addNewAttack(backlashAttack)
 				},
 			)
@@ -98,7 +92,7 @@ export const Thorns = getThorns(
 		rarity: 'common',
 		tokens: 2,
 	},
-	20,
+	10,
 )
 
 export const ThornsII = getThorns(
@@ -110,7 +104,7 @@ export const ThornsII = getThorns(
 		rarity: 'rare',
 		tokens: 3,
 	},
-	30,
+	20,
 )
 
 export const ThornsIII = getThorns(
@@ -122,5 +116,5 @@ export const ThornsIII = getThorns(
 		rarity: 'ultra_rare',
 		tokens: 4,
 	},
-	40,
+	30,
 )

@@ -487,7 +487,7 @@ describe('Test Pharaoh Xibalba', () => {
 							query.row.currentPlayer,
 							query.row.index(1),
 						)?.health,
-					).toBe(PharaohRare.health - 20 /** Wolf */ - 20 /** Thorns */)
+					).toBe(PharaohRare.health - 20 /** Wolf */ - 10 /** Thorns */)
 					yield* pick(
 						game,
 						query.slot.currentPlayer,

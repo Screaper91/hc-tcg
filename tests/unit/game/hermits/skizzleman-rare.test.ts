@@ -83,7 +83,7 @@ describe('Test Skizzleman Rare', () => {
 							query.row.opponentPlayer,
 							query.row.index(0),
 						)?.health,
-					).toBe(SkizzlemanRare.health - 20 /* Thorns damage */)
+					).toBe(SkizzlemanRare.health - 10 /* Thorns damage */)
 				},
 			},
 			{startWithAllCards: true, noItemRequirements: true},

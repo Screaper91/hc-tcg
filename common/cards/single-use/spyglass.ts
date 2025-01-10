@@ -15,7 +15,7 @@ const Spyglass: SingleUse = {
 	rarity: 'rare',
 	tokens: 1,
 	description:
-		"Look at your opponent's hand, and then flip a coin.\nIf heads, choose one card to discard from your opponent's hand.",
+		"Look through your opponent's hand. Flip a coin.\nIf heads, opponent chooses 1 of those cards to discard.",
 	showConfirmationModal: true,
 	log: (values) => `${values.defaultLog}, and ${values.coinFlip}`,
 	attachCondition: query.every(
@@ -46,22 +46,28 @@ const Spyglass: SingleUse = {
 				modal: {
 					type: 'selectCards',
 					name: 'Spyglass',
-					description: canDiscard ? 'Select 1 card to discard' : '',
+					description: '',
 					cards: opponentPlayer.getHand().map((card) => card.entity),
-					selectionSize: canDiscard ? 1 : 0,
+					selectionSize: 0,
 					cancelable: true,
 					primaryButton: {
 						text: canDiscard ? 'Confirm Selection' : 'Close',
 						variant: 'default',
 					},
 				},
-				onResult(modalResult) {
-					if (!modalResult) return
-					if (!canDiscard) return
+				onResult(_modalResult) {},
+				onTimeout() {},
+			})
 
-					if (!modalResult.cards || modalResult.cards.length !== 1) return
+			if (!canDiscard) return
 
-					let card = game.components.get(modalResult.cards[0].entity)
+			game.addPickRequest({
+				id: component.entity,
+				player: opponentPlayer.entity,
+				message: 'Select 1 card from your hand to discard',
+				canPick: query.slot.hand,
+				onResult(pickedSlot) {
+					const card = pickedSlot.getCard()
 					if (!card) return
 
 					card.discard()
@@ -71,16 +77,14 @@ const Spyglass: SingleUse = {
 					return
 				},
 				onTimeout() {
-					if (canDiscard) {
-						// Discard a random card from the opponent's hand
-						let opponentHand = opponentPlayer.getHand()
-						const slotIndex = Math.floor(Math.random() * opponentHand.length)
-						game.battleLog.addEntry(
-							player.entity,
-							getEntry(opponentHand[slotIndex]),
-						)
-						opponentHand[slotIndex].discard()
-					}
+					// Discard a random card from the opponent's hand
+					let opponentHand = opponentPlayer.getHand()
+					const slotIndex = Math.floor(Math.random() * opponentHand.length)
+					game.battleLog.addEntry(
+						player.entity,
+						getEntry(opponentHand[slotIndex]),
+					)
+					opponentHand[slotIndex].discard()
 				},
 			})
 		})
