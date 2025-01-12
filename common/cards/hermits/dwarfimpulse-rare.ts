@@ -9,7 +9,7 @@ import {GameModel} from '../../models/game-model'
 import {IgnoreAttachSlotEffect} from '../../status-effects/ignore-attach'
 import {afterAttack, beforeAttack} from '../../types/priorities'
 import {hermit} from '../defaults'
-import GoldenAxe from '../single-use/golden-axe'
+import GoldenAxe, {GoldenAxe_V2} from '../single-use/golden-axe'
 import {Hermit} from '../types'
 
 const DwarfImpulseRare: Hermit = {
@@ -72,7 +72,7 @@ const DwarfImpulseRare: Hermit = {
 				goldenAxeEntity = game.components.findEntity(
 					CardComponent,
 					query.card.slot(query.slot.singleUse),
-					query.card.is(GoldenAxe),
+					query.card.is(GoldenAxe, GoldenAxe_V2),
 				)
 
 				if (!goldenAxeEntity) return
@@ -90,6 +90,14 @@ const DwarfImpulseRare: Hermit = {
 					onResult(pickedSlot) {
 						if (!pickedSlot.inRow()) return
 						goldenAxeRedirect = pickedSlot.rowEntity
+						if (
+							game.components.exists(
+								CardComponent,
+								query.card.slot(query.slot.singleUse),
+								query.card.is(GoldenAxe_V2),
+							)
+						)
+							return
 						game.components
 							.filterEntities(
 								CardComponent,

@@ -18,7 +18,7 @@ import FishingRod from './fishing-rod'
 import FlintAndSteel from './flint-and-steel'
 import Fortune from './fortune'
 import GoldenApple from './golden-apple'
-import GoldenAxe from './golden-axe'
+import GoldenAxe, {GoldenAxe_V2} from './golden-axe'
 import {InstantHealth, InstantHealthII} from './instant-health'
 import InvisibilityPotion from './invisibility-potion'
 import Knockback from './knockback'
@@ -64,6 +64,7 @@ const singleUseCardClasses: Array<Card> = [
 	Fortune,
 	GoldenApple,
 	GoldenAxe,
+	GoldenAxe_V2,
 	InstantHealth,
 	InstantHealthII,
 	InvisibilityPotion,
