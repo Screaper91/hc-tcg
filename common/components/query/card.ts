@@ -13,12 +13,18 @@ import {TypeT} from '../../types/cards'
 
 export const isHermit: ComponentQuery<CardComponent> = (_game, card) =>
 	card.isHermit()
+export const isHealth: ComponentQuery<CardComponent> = (_game, card) =>
+	card.isHealth()
 export const isAttach: ComponentQuery<CardComponent> = (_game, card) =>
 	card.isAttach()
 export const isItem: ComponentQuery<CardComponent> = (_game, card) =>
 	card.isItem()
 export const isSingleUse: ComponentQuery<CardComponent> = (_game, card) =>
 	card.isSingleUse()
+
+/** Return true if this card is a prize card */
+export const prizeCard: ComponentQuery<CardComponent> = (_game, card) =>
+	card.prizeCard
 
 /** Return true if the card is on the board */
 export const attached: ComponentQuery<CardComponent> = (_game, card) =>

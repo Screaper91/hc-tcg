@@ -29,7 +29,7 @@ const JinglerRare: Hermit = {
 		cost: ['speedrunner', 'speedrunner', 'any'],
 		damage: 80,
 		power:
-			'Flip a coin.\nIf heads, your opponent must choose a card to discard from their hand.',
+			'Flip a coin.\nIf heads, your opponent must choose one card to discard from their hand.',
 	},
 	onAttach(
 		game: GameModel,
@@ -54,7 +54,7 @@ const JinglerRare: Hermit = {
 					player: opponentPlayer.entity,
 					id: component.entity,
 					message: 'Pick 1 card from your hand to discard',
-					canPick: query.slot.hand,
+					canPick: query.every(query.slot.opponent, query.slot.hand),
 					onResult(pickedSlot) {
 						pickedSlot.getCard()?.discard()
 					},

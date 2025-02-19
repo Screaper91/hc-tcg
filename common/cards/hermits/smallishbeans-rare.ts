@@ -4,7 +4,11 @@ import {GameModel} from '../../models/game-model'
 import {beforeAttack} from '../../types/priorities'
 import {hermit} from '../defaults'
 import {Hermit} from '../types'
-import SmallishbeansCommon from './smallishbeans-common'
+import EthosLabCommon from './ethoslab-common'
+import EthosLabRare from './ethoslab-rare'
+import EthosLabUltraRare from './ethoslab-ultra-rare'
+import GeminiTayCommon from './geminitay-common'
+import GeminiTayRare from './geminitay-rare'
 
 const SmallishbeansRare: Hermit = {
 	...hermit,
@@ -28,7 +32,7 @@ const SmallishbeansRare: Hermit = {
 		cost: ['explorer', 'explorer', 'any'],
 		damage: 90,
 		power:
-			'For every other Smallishbeans on the game board, do an additional 10hp damage.',
+			'For each of your AFK Ethos or Gems on the game board, do an additional 10hp damage.',
 	},
 	onAttach(
 		game: GameModel,
@@ -42,14 +46,21 @@ const SmallishbeansRare: Hermit = {
 				if (!attack.isAttacker(component.entity) || attack.type !== 'secondary')
 					return
 
-				const joelQuantity = game.components.filter(
+				const obsessionAmount = game.components.filter(
 					CardComponent,
 					query.card.attached,
-					query.card.is(SmallishbeansCommon, SmallishbeansRare),
-					query.not(query.card.entity(component.entity)),
+					query.card.is(
+						EthosLabCommon,
+						EthosLabRare,
+						EthosLabUltraRare,
+						GeminiTayCommon,
+						GeminiTayRare,
+					),
+					query.card.currentPlayer,
+					query.not(query.card.active),
 				).length
 
-				attack.addDamage(component.entity, joelQuantity * 10)
+				attack.addDamage(component.entity, obsessionAmount * 10)
 			},
 		)
 	},

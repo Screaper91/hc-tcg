@@ -79,6 +79,7 @@ function Settings({setMenuSection}: Props) {
 	}
 	const handleGameSettings = () => changeMenuSection('game-settings')
 	const handleDataSettings = () => changeMenuSection('data-settings')
+	const handleHallOfFame = () => changeMenuSection('hall-of-fame')
 
 	const handleCredits = () => changeMenuSection('credits')
 
@@ -101,10 +102,6 @@ function Settings({setMenuSection}: Props) {
 				<UpdatesModal
 					onClose={() => {
 						setUpdatesOpen(!updatesOpen)
-						localStorage.setItem(
-							'latestUpdateView',
-							(new Date().valueOf() / 1000).toFixed(),
-						)
 					}}
 				/>
 			)}
@@ -180,6 +177,13 @@ function Settings({setMenuSection}: Props) {
 									: 'N/A'}
 							</span>
 						</div>
+						<Button
+							className={css.hofButton}
+							variant="stone"
+							onClick={handleHallOfFame}
+						>
+							Hall of Fame
+						</Button>
 					</div>
 				</div>
 			</MenuLayout>

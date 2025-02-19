@@ -20,7 +20,6 @@ import {
 } from 'common/types/turn-action-data'
 import {executeAttacks} from 'common/utils/attacks'
 import {applySingleUse} from 'common/utils/board'
-import {getLocalModalData} from '../utils/state-gen'
 
 function getAttack(
 	game: GameModel,
@@ -53,11 +52,11 @@ function getAttack(
 	return attacks
 }
 
-export function* attackSaga(
+export function attackAction(
 	game: GameModel,
 	turnAction: AttackActionData,
 	checkForRequests = true,
-): Generator<any, void> {
+): void {
 	const hermitAttackType = attackActionToAttack[turnAction.type]
 	const {currentPlayer, state} = game
 	const activeInstance = game.components.find(
@@ -130,10 +129,10 @@ export function* attackSaga(
 	}
 }
 
-export function* playCardSaga(
+export function playCardAction(
 	game: GameModel,
 	turnAction: PlayCardActionData,
-): Generator<any, void> {
+): void {
 	// Make sure data sent from client is correct
 	const slotEntity = turnAction?.slot
 	const localCard = turnAction?.card
@@ -232,11 +231,11 @@ export function* playCardSaga(
 	currentPlayer.hooks.onAttach.call(card)
 }
 
-export function* applyEffectSaga(game: GameModel): Generator<any, void> {
+export function applyEffectAction(game: GameModel): void {
 	applySingleUse(game, null)
 }
 
-export function* removeEffectSaga(game: GameModel): Generator<never, void> {
+export function removeEffectAction(game: GameModel): void {
 	let singleUseCard = game.components.find(
 		CardComponent,
 		query.card.slot(query.slot.singleUse),
@@ -252,10 +251,10 @@ export function* removeEffectSaga(game: GameModel): Generator<never, void> {
 	singleUseCard?.draw()
 }
 
-export function* changeActiveHermitSaga(
+export function changeActiveHermitAction(
 	game: GameModel,
 	turnAction: ChangeActiveHermitActionData,
-): Generator<any, void> {
+): void {
 	const {currentPlayer} = game
 
 	// Find the row we are trying to change to
@@ -290,13 +289,13 @@ export function* changeActiveHermitSaga(
 	}
 }
 
-export function* modalRequestSaga(
+export function modalRequestAction(
 	game: GameModel,
 	modalResult:
 		| LocalSelectCards.Result
 		| LocalCopyAttack.Result
 		| LocalDragCards.Result,
-): Generator<any, void> {
+): void {
 	const modalRequest = game.state.modalRequests[0]
 
 	assert(
@@ -330,11 +329,8 @@ export function* modalRequestSaga(
 		let modalRequest_ = modalRequest as CopyAttack.Request
 		let modal = modalResult as CopyAttack.Result
 		assert(
-			!modal.pick ||
-				!(
-					getLocalModalData(game, modalRequest.modal) as LocalCopyAttack.Data
-				).blockedActions.includes(attackToAttackAction[modal.pick]),
-			`Client picked a blocked attack to copy: ${modal.pick}`,
+			!modal.pick || modalRequest.modal.availableAttacks.includes(modal.pick),
+			`Client picked an action that was not available to copy: ${modal.pick}`,
 		)
 		modalRequest_.onResult(modal)
 	} else throw Error('Unknown modal type')
@@ -347,16 +343,16 @@ export function* modalRequestSaga(
 		const turnAction: AttackActionData = {
 			type: attackToAttackAction[game.state.turn.currentAttack],
 		}
-		yield* attackSaga(game, turnAction, false)
+		attackAction(game, turnAction, false)
 
 		game.state.turn.currentAttack = null
 	}
 }
 
-export function* pickRequestSaga(
+export function pickRequestAction(
 	game: GameModel,
 	pickResult?: SlotEntity,
-): Generator<any, void> {
+): void {
 	// First validate data sent from client
 	assert(pickResult, 'Pick results cannot have an emtpy body.')
 
@@ -396,11 +392,11 @@ export function* pickRequestSaga(
 		const turnAction: AttackActionData = {
 			type: attackToAttackAction[game.state.turn.currentAttack],
 		}
-		const attackResult = yield* attackSaga(game, turnAction, false)
+		attackAction(game, turnAction, false)
 
 		game.state.turn.currentAttack = null
 
-		return attackResult
+		return
 	}
 
 	return

@@ -1,4 +1,3 @@
-import JoeHillsRare from 'common/cards/hermits/joehills-rare'
 import {Card} from 'common/cards/types'
 import {
 	CardComponent,
@@ -8,18 +7,8 @@ import {
 	StatusEffectComponent,
 } from 'common/components'
 import query from 'common/components/query'
-import {ViewerComponent} from 'common/components/viewer-component'
 import {PlayerEntity} from 'common/entities'
 import {GameModel} from 'common/models/game-model'
-import {
-	MultiturnPrimaryAttackDisabledEffect,
-	MultiturnSecondaryAttackDisabledEffect,
-} from 'common/status-effects/multiturn-attack-disabled'
-import {
-	PrimaryAttackDisabledEffect,
-	SecondaryAttackDisabledEffect,
-} from 'common/status-effects/singleturn-attack-disabled'
-import TimeSkipDisabledEffect from 'common/status-effects/time-skip-disabled'
 import {
 	CurrentCoinFlip,
 	LocalCurrentCoinFlip,
@@ -33,6 +22,7 @@ import {
 	LocalStatusEffectInstance,
 	WithoutFunctions,
 } from 'common/types/server-requests'
+import {GameViewer} from '../game-controller'
 
 ////////////////////////////////////////
 // @TODO sort this whole thing out properly
@@ -73,6 +63,7 @@ export function getLocalCard<CardType extends Card>(
 		entity: card.entity,
 		slot: card.slotEntity,
 		turnedOver: card.turnedOver,
+		prizeCard: card.prizeCard,
 		attackHint: attackPreview,
 	}
 }
@@ -100,65 +91,9 @@ export function getLocalModalData(
 		}
 	} else if (modal.type === 'copyAttack') {
 		let hermitCard = game.components.get(modal.hermitCard)!
-		let blockedActions = hermitCard.player.hooks.blockedActions.callSome(
-			[[]],
-			(observerEntity) => {
-				let observer = game.components.get(observerEntity)
-				return observer?.wrappingEntity === hermitCard.entity
-			},
-		)
-
-		/* Due to an issue with the blocked actions system, we have to check if our target has thier action
-		 * blocked by status effects here.
-		 */
-		if (
-			game.components.exists(
-				StatusEffectComponent,
-				query.effect.is(
-					PrimaryAttackDisabledEffect,
-					MultiturnPrimaryAttackDisabledEffect,
-				),
-				query.effect.targetIsCardAnd(
-					query.card.entity(hermitCard.entity),
-					query.card.currentPlayer,
-				),
-			) ||
-			(hermitCard.isHermit() && hermitCard.props.primary.passive)
-		) {
-			blockedActions.push('PRIMARY_ATTACK')
-		}
-
-		if (
-			game.components.exists(
-				StatusEffectComponent,
-				query.effect.is(
-					SecondaryAttackDisabledEffect,
-					MultiturnSecondaryAttackDisabledEffect,
-				),
-				query.effect.targetIsCardAnd(
-					query.card.entity(hermitCard.entity),
-					query.card.currentPlayer,
-				),
-			) ||
-			(hermitCard.isHermit() && hermitCard.props.secondary.passive)
-		) {
-			blockedActions.push('SECONDARY_ATTACK')
-		}
-
-		if (
-			game.components.exists(
-				StatusEffectComponent,
-				query.effect.is(TimeSkipDisabledEffect),
-				query.effect.targetIsPlayerAnd(query.player.currentPlayer),
-			) &&
-			query.card.is(JoeHillsRare)(game, hermitCard)
-		)
-			blockedActions.push('SECONDARY_ATTACK')
-
 		return {
 			...modal,
 			hermitCard: getLocalCard(game, hermitCard),
-			blockedActions: blockedActions,
 		}
 	}
 
@@ -178,6 +113,7 @@ function getLocalCoinFlip(
 function getLocalPlayerState(
 	game: GameModel,
 	playerState: PlayerComponent,
+	viewer: GameViewer,
 ): LocalPlayerState {
 	let singleUseSlot = game.components.find(
 		SlotComponent,
@@ -186,12 +122,6 @@ function getLocalPlayerState(
 	let singleUseCard = game.components.find(
 		CardComponent,
 		query.card.slotEntity(singleUseSlot),
-	)
-
-	let viewerForPlayer = game.components.find(
-		ViewerComponent,
-		(_game, viewer) =>
-			!viewer.spectator && viewer.playerOnLeft.entity === playerState.entity,
 	)
 
 	if (!singleUseSlot) {
@@ -255,7 +185,7 @@ function getLocalPlayerState(
 
 	const localPlayerState: LocalPlayerState = {
 		entity: playerState.entity,
-		playerId: viewerForPlayer?.playerId,
+		playerId: viewer?.player.id,
 		playerName: playerState.playerName,
 		minecraftName: playerState.minecraftName,
 		censoredPlayerName: playerState.censoredPlayerName,
@@ -270,7 +200,7 @@ function getLocalPlayerState(
 
 export function getLocalGameState(
 	game: GameModel,
-	viewer: ViewerComponent,
+	viewer: GameViewer,
 ): LocalGameState {
 	const playerState = game.components.find(
 		PlayerComponent,
@@ -290,10 +220,15 @@ export function getLocalGameState(
 
 	// convert player states
 	const players: Record<PlayerEntity, LocalPlayerState> = {}
-	players[viewer.playerOnLeft.entity] = getLocalPlayerState(game, playerState)
+	players[viewer.playerOnLeft.entity] = getLocalPlayerState(
+		game,
+		playerState,
+		viewer,
+	)
 	players[viewer.playerOnRight.entity] = getLocalPlayerState(
 		game,
 		opponentState,
+		viewer,
 	)
 
 	// Pick message or modal id

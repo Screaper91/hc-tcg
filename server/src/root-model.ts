@@ -1,13 +1,14 @@
 import {CARDS_LIST} from 'common/cards'
-import {GameModel} from 'common/models/game-model'
 import {PlayerModel} from 'common/models/player-model'
+import {Update} from 'common/types/server-requests'
 import {Database} from 'db/db'
 import dotenv from 'dotenv'
+import {GameController} from 'game-controller'
 import {Hook} from '../../common/types/hooks'
 
 export class RootModel {
 	public players: Record<string, PlayerModel> = {}
-	public games: Record<string, GameModel> = {}
+	public games: Record<string, GameController> = {}
 	public queue: Array<string> = []
 	public db: Database
 	/** Game code ->  time code was created, and info */
@@ -24,13 +25,13 @@ export class RootModel {
 		}
 	> = {}
 	public hooks = {
-		newGame: new Hook<string, (game: GameModel) => void>(),
-		gameRemoved: new Hook<string, (game: GameModel) => void>(),
+		newGame: new Hook<string, (game: GameController) => void>(),
+		gameRemoved: new Hook<string, (game: GameController) => void>(),
 		playerJoined: new Hook<string, (player: PlayerModel) => void>(),
 		playerLeft: new Hook<string, (player: PlayerModel) => void>(),
 		privateCancelled: new Hook<string, (code: string) => void>(),
 	}
-	public updates: Record<string, Array<string>> = {}
+	public updates: Array<Update> = []
 
 	public constructor() {
 		const env = dotenv.config()
@@ -68,7 +69,7 @@ export class RootModel {
 	public addPlayer(player: PlayerModel) {
 		this.players[player.id] = player
 	}
-	public addGame(game: GameModel) {
+	public addGame(game: GameController) {
 		this.games[game.id] = game
 	}
 }

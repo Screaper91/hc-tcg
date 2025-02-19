@@ -44,6 +44,7 @@ export class CardComponent<CardType extends Card = Card> {
 	observerEntity: ObserverEntity | null
 
 	turnedOver: boolean
+	prizeCard: boolean
 
 	hooks: {
 		onChangeSlot: GameHook<(slot: SlotComponent) => void>
@@ -63,7 +64,7 @@ export class CardComponent<CardType extends Card = Card> {
 		this.entity = entity
 		this.observerEntity = null
 		if (card instanceof Object) {
-			this.props = CARDS[card.id] as CardType
+			this.props = card as CardType
 		} else {
 			this.props = CARDS[card] as CardType
 		}
@@ -76,6 +77,7 @@ export class CardComponent<CardType extends Card = Card> {
 		}
 
 		this.turnedOver = false
+		this.prizeCard = false
 
 		this.hooks = {
 			onChangeSlot: new GameHook(),

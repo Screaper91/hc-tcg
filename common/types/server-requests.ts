@@ -11,7 +11,6 @@ import {StatusEffect} from '../status-effects/status-effect'
 import {ButtonVariant} from './buttons'
 import {SlotTypeT} from './cards'
 import {Deck} from './deck'
-import {TurnActions} from './game-state'
 
 export type PlayerInfo = {
 	playerName: string
@@ -39,6 +38,7 @@ export type LocalCardInstance<CardType extends Card = Card> = {
 	readonly slot: SlotEntity | null
 	readonly attackHint: string | null
 	readonly turnedOver: boolean
+	readonly prizeCard: boolean
 }
 
 export type LocalStatusEffectInstance<
@@ -126,7 +126,7 @@ export namespace LocalCopyAttack {
 		name: string
 		description: string
 		hermitCard: LocalCardInstance
-		blockedActions: TurnActions
+		availableAttacks: Array<'primary' | 'secondary'>
 		cancelable: boolean
 	}
 
@@ -165,4 +165,11 @@ export namespace LocalDragCards {
 				leftCards: null
 				rightCards: null
 		  }
+}
+
+export type Update = {
+	readonly tag: string
+	readonly description: string
+	readonly link: string
+	readonly timestamp: number
 }
