@@ -14,9 +14,9 @@ Differences between Hermitcraft TCG Online and the version on Hermitcraft Season
 ### Wolf
 *If Wolf is attached to rare 5AM Pearl, her secondary deals an additional 30hp damage*
 
-**Online:** Can only be played on your active row. If any of your Hermits are attacked and take damage on the opponent's turn, each attached Wolf deals 20hp damage to the opponent's active Hermit.
+**Online/CREO:** Can only be played on your active row. If any of your Hermits are attacked and take damage on the opponent's turn, each attached Wolf deals 20hp damage to the opponent's active Hermit.
 
-**CREO/HC10:** If the attached Hermit is attacked by the opponent, deal 20hp damage (ignores armor).
+**HC10:** If the attached Hermit is attacked by the opponent, deal 20hp damage (ignores armor).
 
 ### Thorns
 **Online:** If the attached Hermit is attacked and takes damage on the opponent's turn, deal `X`hp damage to the opponent (ignores armor).
@@ -59,7 +59,7 @@ special attack: "Peace & Love" - *Heal all Hermits that are adjacent to your act
 
 **Online:** primary - 1x Any - 30*
 
-**CREO:** secondary - 1x Any - 30*
+**CREO:** secondary - 1x Any - 00*
 
 **HC10:** primary - 1x Farm - 00*
 
@@ -70,6 +70,13 @@ secondary: "Empire" - 2x Speedrunner, 1x Any - 90*
 
 **CREO/~~HC10~~:** *On opponent's next turn, any attack from King Joel or Grand Architect does no damage. Does not include status or effect cards.
 
+### Hot Guy (rare)
+secondary: "Hawkeye" - 2x Explorer - 80*
+
+**Online:** *When used with a Bow or Crossbow effect card, that effect card's damage doubles.
+
+**CREO/HC10:** *When used with the bow effect card, the bow card does double damage to the chosen AFK opposing Hermit.
+
 ### Frenchralis (rare)
 secondary: "Oh là là!" - 2x Prankster - 80*
 
@@ -77,31 +84,17 @@ secondary: "Oh là là!" - 2x Prankster - 80*
 
 **CREO/~~HC10~~:** *If opponent has 2 knockouts, this card does double damage.
 
-### Joel/Smallishbeans (rare)
-secondary: "Obsess" - 2x Explorer, 1x Any - 90*
-
-**Online:** Deals an additional 10hp damage for every AFK Joel or King Joel on the board.
-
-**CREO/HC10:** Deals an additional 10hp damage for every other Smallishbeans on the board.
-
 ### Skizzleman (common)
-Attack | Online / Creo | HC10 |
+Attack | Online / CREO | HC10 |
 | - | - | - |
 Laugh Attack | 1x Any - 40 | 1x Explorer - 50
 Bear Hug | 2x Explorer, 1x Any - 90 | 1x Explorer, 1x Any - 70
  
 ### Skizzleman (rare)
-Attack | Online / Creo | HC10 
+Attack | Online / CREO | HC10 
 | - | - | - 
 Hupper Cut | 1x Any - 40 | 1x Builder - 40 
 Gas Light | 2x Builder - 70* | 2x Builder - 80*
-
-### King Joel (common)
-primary "Clone" - `cost` - 40
-
-**Online/HC10:** 1xAny
-
-**CREO:** 1xTerraform
 
 ## Deck Composition
 ### Item Cards
