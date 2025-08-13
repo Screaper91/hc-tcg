@@ -87,6 +87,8 @@ import ShadEECommon from './shadee-common'
 import ShadeEERare from './shadeee-rare'
 import SkizzlemanCommon from './skizzleman-common'
 import SkizzlemanRare from './skizzleman-rare'
+import SkreaperCommon from './skreaper-common'
+import SkreaperRare from './skreaper-rare'
 import SmallishbeansCommon from './smallishbeans-common'
 import SmallishbeansRare from './smallishbeans-rare'
 import SpookyStressCommon from './spookystress-common'
@@ -233,6 +235,8 @@ const hermitCardClasses: Array<Card> = [
 	ZedaphPlaysRare,
 	ZombieCleoCommon,
 	ZombieCleoRare,
+	SkreaperCommon,
+	SkreaperRare,
 ]
 
 export default hermitCardClasses
