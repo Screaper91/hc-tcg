@@ -47,7 +47,6 @@ const TinFoilChefUltraRare: Hermit = {
 				StatusEffectComponent,
 				query.effect.is(TFCDiscardedFromEffect),
 				query.effect.targetIsCardAnd(query.card.rowEntity(row)),
-				(_game, value) => value.creatorEntity === component.entity,
 			)
 		}
 
@@ -74,7 +73,7 @@ const TinFoilChefUltraRare: Hermit = {
 
 				game.components
 					.new(StatusEffectComponent, TFCDiscardedFromEffect, component.entity)
-					.apply(opponentPlayer.activeRow.getHermit()?.entity)
+					.apply(opponentPlayer.getActiveHermit()?.entity)
 
 				game.components.find(CardComponent, targetCardQuery)?.discard()
 			},

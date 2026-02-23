@@ -181,7 +181,7 @@ describe('Test Ultra Rare TFC "Take It Easy"', () => {
 		)
 	})
 
-	test('Can discard from the same hermit after TFC is knocked-out', async () => {
+	test('Can not discard from the same hermit after TFC is knocked-out', async () => {
 		await testGame(
 			{
 				playerOneDeck: [EthosLabCommon, ChainmailArmor, ChainmailArmor],
@@ -244,15 +244,15 @@ describe('Test Ultra Rare TFC "Take It Easy"', () => {
 							query.card.opponentPlayer,
 							query.card.active,
 							query.card.slot(query.slot.attach),
-						),
-					).toBe(null)
+						)?.props,
+					).toBe(ChainmailArmor)
 				},
 			},
 			{startWithAllCards: true, noItemRequirements: true, forceCoinFlip: true},
 		)
 	})
 
-	test('Different TFC can discard from the same hermit', async () => {
+	test('Different TFC can not discard from the same hermit', async () => {
 		await testGame(
 			{
 				playerOneDeck: [EthosLabCommon, ChainmailArmor, ChainmailArmor],
@@ -291,8 +291,8 @@ describe('Test Ultra Rare TFC "Take It Easy"', () => {
 							query.card.opponentPlayer,
 							query.card.active,
 							query.card.slot(query.slot.attach),
-						),
-					).toBe(null)
+						)?.props,
+					).toBe(ChainmailArmor)
 				},
 			},
 			{startWithAllCards: true, noItemRequirements: true, forceCoinFlip: true},
